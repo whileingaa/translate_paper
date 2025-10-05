@@ -4,7 +4,7 @@ import zipfile
 
 mineru_api_url = "http://localhost:8000/file_parse"
 
-def request_mineru_translate(filepath, url=mineru_api_url, output_dir="output", extract_zip_after=True):
+def request_mineru_translate(filepath, url=mineru_api_url, output_dir="output", extract_zip_after=True, delete_zip=False) -> str:
     data = {
         "return_middle_json": "false",
         "return_model_output": "false",
@@ -33,12 +33,16 @@ def request_mineru_translate(filepath, url=mineru_api_url, output_dir="output", 
             f.write(response.content)
         print(f"File saved to {os.path.join(output_dir, f'{filename}.zip')}")
 
-        #解压下载的zip文件，解压路径同zip文件路径，不删除zip
+        #解压下载的zip文件，解压路径同zip文件路径，是否删除zip文件可选
         if extract_zip_after:
-            extract_zip(os.path.join(output_dir, f"{filename}.zip"), delete_zip=False)
+            extract_zip(os.path.join(output_dir, f"{filename}.zip"), delete_zip=delete_zip)
+            return os.path.join(output_dir, filename, filename + ".md")
+        return os.path.join(output_dir, f"{filename}.zip")
+
 
     else:
         print(f"Request failed with status code {response.status_code}: {response.text}")
+        return ""
 
 
 def extract_zip(zip_path, extract_to=None, delete_zip=False):

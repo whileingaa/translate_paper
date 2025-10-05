@@ -1,6 +1,6 @@
 from typing import List, Tuple
 import re
-from count_token import count_tokens, count_tokens_batch
+from service.count_token import count_tokens, count_tokens_batch
 def _detect_atx_headings(line:str)->bool:
     return bool(re.match(r'^#{1,6}\s', line))
 
