@@ -1,0 +1,8 @@
+# Python cache
+__pycache__/
+
+# Output directory
+output/
+
+# Environment variables
+.env
