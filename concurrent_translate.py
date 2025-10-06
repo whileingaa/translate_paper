@@ -5,7 +5,7 @@ import os
 from tqdm import tqdm
 from llm_translate import translate_text
 from chunk_md import chunk_md
-
+from service.filename_clean import sanitize_filename
 
 def translate_chunk_with_retry(
     chunk: str,
@@ -175,12 +175,28 @@ def translate_paper(
     try:
         print(f"正在处理文件: {input_md_path}")
         if not output_md_path:
-            base,ext=os.path.splitext(os.path.basename(input_md_path))
-            output_md_path=os.path.join(os.path.dirname(input_md_path),f"{base}_translated{ext}")
+            # 自动生成输出路径（与输入文件同目录）
+            base, ext = os.path.splitext(os.path.basename(input_md_path))
+            # 清理文件名
+            clean_base = sanitize_filename(base)
+            output_filename = f"{clean_base}_translated{ext}"
+            output_md_path = os.path.join(os.path.dirname(input_md_path), output_filename)
         elif os.path.isdir(output_md_path):
+            # 输出路径是目录，自动生成文件名
             timestamp = time.strftime("%Y%m%d_%H%M%S")
             base, ext = os.path.splitext(os.path.basename(input_md_path))
-            output_md_path = os.path.join(output_md_path, f"{base}_translated_{timestamp}{ext}")
+            # 清理文件名
+            clean_base = sanitize_filename(base)
+            output_filename = f"{clean_base}_translated_{timestamp}{ext}"
+            output_md_path = os.path.join(output_md_path, output_filename)
+        else:
+            # 用户指定了完整的输出路径，仍需清理文件名部分
+            output_dir = os.path.dirname(output_md_path)
+            output_file = os.path.basename(output_md_path)
+            clean_output_file = sanitize_filename(output_file)
+            output_md_path = os.path.join(output_dir, clean_output_file) if output_dir else clean_output_file
+        
+        print(f"输出路径: {output_md_path}\n")
         
         # 步骤 1: 分块
         print("步骤 1/3: 分块处理...")

@@ -1,6 +1,7 @@
 import requests
 import os
 import zipfile
+from service.filename_clean import sanitize_filename
 
 mineru_api_url = "http://localhost:8000/file_parse"
 
@@ -22,22 +23,30 @@ def request_mineru_translate(filepath, url=mineru_api_url, output_dir="output", 
         "response_format_zip": "true",
         "formula_enable": "true",
     }
-    filename, file_extension = os.path.splitext(os.path.basename(filepath))
+    # 获取原始文件名并清理
+    original_filename = os.path.basename(filepath)
+    filename, file_extension = os.path.splitext(original_filename)
+    
+    # 清理文件名，移除不合法字符
+    clean_filename = sanitize_filename(filename)
+    
     files={
-        'files': (filename + file_extension,open(filepath, 'rb'), f"application/{file_extension.replace('.', '')}"),
+        'files': (original_filename, open(filepath, 'rb'), f"application/{file_extension.replace('.', '')}"),
     }
     response = requests.post(url, data=data, files=files)
     if response.status_code == 200:
         os.makedirs(output_dir, exist_ok=True)
-        with open(os.path.join(output_dir, f"{filename}.zip"), "wb") as f:
+        # 使用清理后的文件名保存
+        zip_path = os.path.join(output_dir, f"{clean_filename}.zip")
+        with open(zip_path, "wb") as f:
             f.write(response.content)
-        print(f"File saved to {os.path.join(output_dir, f'{filename}.zip')}")
+        print(f"File saved to {zip_path}")
 
         #解压下载的zip文件，解压路径同zip文件路径，是否删除zip文件可选
         if extract_zip_after:
-            extract_zip(os.path.join(output_dir, f"{filename}.zip"), delete_zip=delete_zip)
-            return os.path.join(output_dir, filename, filename + ".md")
-        return os.path.join(output_dir, f"{filename}.zip")
+            extract_zip(zip_path, delete_zip=delete_zip)
+            return os.path.join(output_dir, clean_filename, clean_filename + ".md")
+        return zip_path
 
 
     else:
