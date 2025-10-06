@@ -3,7 +3,7 @@ from typing import List, Tuple, Optional
 import time
 import os
 from tqdm import tqdm
-from llm_translate import translate_text
+from service.llm_translate import translate_text
 from chunk_md import chunk_md
 from service.filename_clean import sanitize_filename
 
