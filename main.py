@@ -1,9 +1,9 @@
 from mineru_ocr import request_mineru_translate
 from concurrent_translate import translate_paper
-def main(input_file:str, output_file :str="./output", extract_zip_after=True, delete_zip=True,max_tokens=2048, max_workers=3, max_retries=3):
+def main(input_file:str, output_file :str="./output",lang="en", extract_zip_after=True, delete_zip=True,max_tokens=2048, max_workers=3, max_retries=3):
     # 示例用法
 
-    input_md_path = request_mineru_translate(filepath=input_file, output_dir=output_file, extract_zip_after=extract_zip_after, delete_zip=delete_zip)
+    input_md_path = request_mineru_translate(filepath=input_file, output_dir=output_file, lang=lang, extract_zip_after=extract_zip_after, delete_zip=delete_zip)
     if not input_md_path:
         print("OCR 处理失败，无法继续翻译")
         return
@@ -19,10 +19,11 @@ def main(input_file:str, output_file :str="./output", extract_zip_after=True, de
     )
 
 if __name__ == "__main__":
-    test_filepath = r""
+    test_filepath = r"C:\Users\zzz\Zotero\storage\UF8FIHGZ\Yao 等 - ReAct Synergizing Reasoning and Acting in Language Models.pdf"
     main(
         input_file=test_filepath,
         output_file="./output",
+        lang="en",
         extract_zip_after=True,
         delete_zip=True,
         max_tokens=2048,

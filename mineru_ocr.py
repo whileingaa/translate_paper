@@ -5,23 +5,28 @@ from service.filename_clean import sanitize_filename
 
 mineru_api_url = "http://localhost:8000/file_parse"
 
-def request_mineru_translate(filepath, url=mineru_api_url, output_dir="output", extract_zip_after=True, delete_zip=False) -> str:
+def request_mineru_translate(filepath, url=mineru_api_url, output_dir="output", lang="en", extract_zip_after=True, delete_zip=False) -> str:
+
+    if not os.path.exists(filepath):
+        print(f"需要翻译的文件不存在: {filepath}")
+        return ""
+    #mineru api运行后，打开http://localhost:8000/docs查看文档
     data = {
+        "output_dir": output_dir,
+        "lang_list": lang,
+        "backend": "pipeline",
+        "parse_method": "auto",
+        "formula_enable": "true",
+        "table_enable": "true",
+        "server_url": "string",
+        "return_md": "true",
         "return_middle_json": "false",
         "return_model_output": "false",
-        "return_md": "true",
-        "return_images": "true",
-        "end_page_id": "99999",
-        "parse_method": "auto",
-        "start_page_id": "0",
-        "lang_list": "ch",
-        "output_dir": output_dir,
-        "server_url": "string",
         "return_content_list": "false",
-        "backend": "pipeline",
-        "table_enable": "true",
+        "return_images": "true",
         "response_format_zip": "true",
-        "formula_enable": "true",
+        "start_page_id": "0",
+        "end_page_id": "99999",       
     }
     # 获取原始文件名并清理
     original_filename = os.path.basename(filepath)
