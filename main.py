@@ -19,7 +19,7 @@ def main(input_file:str, output_file :str="./output", extract_zip_after=True, de
     )
 
 if __name__ == "__main__":
-    test_filepath = r"C:\Users\zzz\Zotero\storage\QS95IVS6\Park 等 - 2023 - Generative Agents Interactive Simulacra of Human Behavior.pdf"
+    test_filepath = r""
     main(
         input_file=test_filepath,
         output_file="./output",
