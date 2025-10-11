@@ -19,7 +19,7 @@ def main(input_file:str, output_file :str="./output",lang="en", extract_zip_afte
     )
 
 if __name__ == "__main__":
-    test_filepath = r"C:\Users\zzz\Zotero\storage\UF8FIHGZ\Yao 等 - ReAct Synergizing Reasoning and Acting in Language Models.pdf"
+    test_filepath = r""
     main(
         input_file=test_filepath,
         output_file="./output",

@@ -6,3 +6,5 @@ output/
 
 # Environment variables
 .env
+
+main.py
